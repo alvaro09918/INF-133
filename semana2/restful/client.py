@@ -9,9 +9,9 @@ print(get_response.text)
 # POST agrega un nuevo estudiante por la ruta /estudiantes
 ruta_post = url + "estudiantes"
 nuevo_estudiante = {
-    "nombre": "Juanito",
+    "nombre": "Alvaro",
     "apellido": "Pérez",
-    "carrera": "Ingeniería Agronomica",
+    "carrera": "Informatica",
 }
 
 post_response = requests.request(method="POST", url=ruta_post, json=nuevo_estudiante)
