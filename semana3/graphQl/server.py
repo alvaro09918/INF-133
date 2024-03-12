@@ -8,6 +8,7 @@ class Query(ObjectType):
     
     def resolve_hello(root, info):
         return "Hello, world!"
+    
     goodbye = String()
     
     def resolve_goodbye(root, info):
