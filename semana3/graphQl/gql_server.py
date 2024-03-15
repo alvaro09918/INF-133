@@ -55,8 +55,6 @@ class Query(ObjectType):
                 estudiante_carrera.append(estudiante)
         return estudiante_carrera
     
-    
-       
 
 class CrearEstudiante(Mutation):
     class Arguments:
@@ -90,9 +88,46 @@ class DeleteEstudiante(Mutation):
                 estudiantes.pop(i)
                 return DeleteEstudiante(estudiante=estudiante)
         return None
+    
+#modificar estudiante por ID
+class ActualizarEstudiante(Mutation):
+    class Arguments:
+        id = Int()
+        nombre = String()
+        apellido = String()
+        carrera = String()
+
+    estudiante = Field(Estudiante)
+
+    def mutate(root, info, id, nombre, apellido, carrera):
+        for estudiante in estudiantes:
+            if estudiante.id == id:
+                estudiante.nombre = nombre
+                estudiante.apellido = apellido
+                estudiante.carrera = carrera
+                return ActualizarEstudiante(estudiante=estudiante)
+        return None
+
+class actualizarCarrera(Mutation):
+    class Arguments:
+        nombre = String()
+        
+        carrera = String()
+
+    estudiante = Field(Estudiante)
+
+    def mutate(root, info, nombre, carrera):
+        for estudiante in estudiantes:
+            if estudiante.nombre == nombre:
+                estudiante.carrera = carrera
+                return actualizarCarrera(estudiante=estudiante)
+        return None
+    
 class Mutations(ObjectType):
     crear_estudiante = CrearEstudiante.Field()
     delete_estudiante = DeleteEstudiante.Field()
+    actualizar_estudiante=ActualizarEstudiante.Field()
+    actualizar_carrera=actualizarCarrera.Field()
 
 schema = Schema(query=Query, mutation=Mutations)
 

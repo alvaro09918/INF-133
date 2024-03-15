@@ -161,3 +161,36 @@ mutation {
 response_mutation = requests.post(url, json={'query': query_eliminar})
 print(response_mutation.text)
 
+# Definir la consulta GraphQL con la mutación para actualizar un estudiante por ID
+query_actualizar = """
+    mutation {
+        actualizarEstudiante(id:4, nombre:"Alvaro", apellido:"Chambilla", carrera:"Informatica") {
+            estudiante {
+                id
+                nombre
+                apellido
+                carrera
+            }
+        }
+    }
+"""
+response_mutation = requests.post(url, json={'query': query_actualizar})
+print(response_mutation.text)
+
+# Definir la consulta GraphQL con la mutación para actualizar la carrera de un estudiante por nombre y apellido 
+#no corre
+query_actualizar= """
+mutation {
+        actualizarCarrera(nombre:"Jose", carrera:"Informatica") {
+            estudiante {
+                id
+                nombre
+                apellido
+                carrera
+            }
+        }
+    }
+"""
+response_mutation = requests.post(url, json={'query': query_actualizar})
+print(response_mutation.text)
+
