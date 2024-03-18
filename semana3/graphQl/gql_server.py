@@ -123,11 +123,31 @@ class actualizarCarrera(Mutation):
                 return actualizarCarrera(estudiante=estudiante)
         return None
     
+
+    
+#elimina los estudiantes de una determinada carrera
+class DeleteCarrera(Mutation):
+    class Arguments:
+        carrera=String()
+
+    estudiante = Field(Estudiante)
+
+    def mutate(root, info, carrera):
+        estudiantes_eliminados=[]
+        i=0
+        while(i<len(estudiantes)):
+            if(estudiantes[i].carrera==carrera):
+                estudiantes_eliminados.append(estudiantes.pop(i))
+            else:
+                i+=1
+        return DeleteCarrera(estudiantes=estudiantes_eliminados)  
+    
 class Mutations(ObjectType):
     crear_estudiante = CrearEstudiante.Field()
     delete_estudiante = DeleteEstudiante.Field()
     actualizar_estudiante=ActualizarEstudiante.Field()
     actualizar_carrera=actualizarCarrera.Field()
+    delete_carrera=DeleteCarrera.Field()
 
 schema = Schema(query=Query, mutation=Mutations)
 
