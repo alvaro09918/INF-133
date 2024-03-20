@@ -65,9 +65,7 @@ class RESTRequestHandler(BaseHTTPRequestHandler):
         if parsed_path.path == "/estudiantes":
             if "nombre" in query_params:
                 nombre = query_params["nombre"][0]
-                estudiantes_filtrados = EstudiantesService.filter_students_by_name(
-                    nombre
-                )
+                estudiantes_filtrados = EstudiantesService.filter_students_by_name(nombre)
                 if estudiantes_filtrados != []:
                     HTTPResponseHandler.handle_response(
                         self, 200, estudiantes_filtrados

@@ -13,7 +13,33 @@ class DeliveryVehicle:
             return "Entrega realizada con exito"
         else:
             return "El vehículo ha alcanzado su capacidad máxima de entregas"
+        
+class DeliveryService:
+    @staticmethod
+    def instace_vehicle(request_data):
+        vehicle_type = request_data.get("vehicle_type")
+        delivery_factory = DeliveryFactory()
+        delivery_vehicle = delivery_factory.create_delivery_vehicle(vehicle_type)
+        response_data = {"message": delivery_vehicle.deliver()}
+        return response_data
     
+class HTTPResponseHandler:
+    @staticmethod
+    def response_handler(handler,status,data):
+        handler.send_response(status)
+        handler.send_header("Content-type", "application/json")
+        handler.end_headers()
+        handler.wfile.write(json.dumps(data).encode("utf-8"))
+    
+    @staticmethod
+    def response_handler2(handler,status):
+        handler.send_response(status)
+        handler.end_headers()
+        handler.wfile.write(b"Ruta no encontrada")
+
+        
+    
+
 
 
 class Motorcycle(DeliveryVehicle):
@@ -45,23 +71,18 @@ class DeliveryFactory:
 class DeliveryRequestHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         if self.path == "/delivery":
-            content_length = int(self.headers["Content-Length"])
-            post_data = self.rfile.read(content_length)
-            request_data = json.loads(post_data.decode("utf-8"))
-
-            vehicle_type = request_data.get("vehicle_type")
-            delivery_factory = DeliveryFactory()
-            delivery_vehicle = delivery_factory.create_delivery_vehicle(vehicle_type)
-            response_data = {"message": delivery_vehicle.deliver()}
-            
-            self.send_response(200)
-            self.send_header("Content-type", "application/json")
-            self.end_headers()
-            self.wfile.write(json.dumps(response_data).encode("utf-8"))
+            data=self.read_data()
+            vehicle_type =DeliveryService.instace_vehicle(data)
+            HTTPResponseHandler.response_handler(self,200,vehicle_type)
         else:
-            self.send_response(404)
-            self.end_headers()
-            self.wfile.write(b"Ruta no encontrada")
+            HTTPResponseHandler.response_handler2(self,404)
+    
+    def read_data(self):
+        content_length = int(self.headers["Content-Length"])
+        post_data = self.rfile.read(content_length)
+        request_data = json.loads(post_data.decode("utf-8"))
+        return request_data
+
 
 
 def main():

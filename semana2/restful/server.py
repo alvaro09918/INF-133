@@ -40,6 +40,7 @@ class RESTRequestHandler(BaseHTTPRequestHandler):
             content_length = int(self.headers["Content-Length"])
             post_data = self.rfile.read(content_length)
             post_data = json.loads(post_data.decode("utf-8"))
+            
             post_data["id"] = len(estudiantes) + 1
             estudiantes.append(post_data)
             self.send_response(201)
